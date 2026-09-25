@@ -103,7 +103,7 @@
     .demo-label { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 11px; }
     .demo-label::before { width: 6px; height: 6px; border-radius: 50%; background: var(--coral); content: ""; }
 
-    .filters { display: grid; grid-template-columns: minmax(220px, 1.7fr) repeat(3, minmax(130px, .85fr)) auto; gap: 9px; padding: 15px 0 18px; }
+    .filters { display: grid; grid-template-columns: minmax(220px, 1.7fr) repeat(4, minmax(130px, .85fr)) auto; gap: 9px; padding: 15px 0 18px; }
     .search-wrap { position: relative; }
     .search-wrap svg { position: absolute; top: 12px; left: 12px; width: 17px; height: 17px; color: #928b97; pointer-events: none; }
     .field, .search-input { width: 100%; height: 42px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); font-size: 12px; }
@@ -130,6 +130,8 @@
     .title-name { margin: 0 0 5px; font-size: 15px; line-height: 1.25; }
     .description { min-height: 37px; margin: 0 0 12px; color: var(--muted); font-size: 11px; line-height: 1.5; }
     .card-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .details-button { min-height: 34px; padding: 0 9px; border: 1px solid var(--line); border-radius: 7px; background: transparent; color: var(--muted); cursor: pointer; font-size: 11px; font-weight: 800; }
+    .details-button:hover { border-color: var(--purple); color: var(--purple-dark); }
     .save-button { min-height: 34px; padding: 0 10px; border: 1px solid var(--purple); border-radius: 7px; background: var(--purple); color: white; cursor: pointer; font-size: 11px; font-weight: 800; transition: background .18s ease, transform .18s ease; }
     .save-button:hover { transform: translateY(-1px); background: var(--purple-dark); }
     .save-button.is-saved { border-color: #d9cfe5; background: var(--purple-light); color: var(--purple-dark); }
@@ -142,6 +144,16 @@
     .empty-state h2 { margin-bottom: 6px; font: 700 20px Georgia, serif; }
     .empty-state p { max-width: 390px; margin: 0 auto; color: var(--muted); font-size: 13px; line-height: 1.5; }
     .hidden { display: none !important; }
+    .modal-backdrop { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 18px; background: rgba(15, 12, 18, .68); }
+    .modal { position: relative; width: min(560px, 100%); max-height: min(680px, calc(100vh - 36px)); overflow: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); box-shadow: 0 24px 70px rgba(0, 0, 0, .32); }
+    .modal-hero { min-height: 178px; display: flex; align-items: end; padding: 22px; color: white; background: var(--art); }
+    .modal-hero h2 { max-width: 80%; margin: 0; font: 700 31px/1.05 Georgia, serif; }
+    .modal-close { position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.55); border-radius: 50%; background: rgba(20, 15, 20, .32); color: white; cursor: pointer; font-size: 20px; line-height: 1; }
+    .modal-body { padding: 20px 22px 22px; }
+    .modal-meta { margin-bottom: 12px; color: var(--muted); font-size: 12px; }
+    .modal-description { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .modal-actions { display: flex; flex-wrap: wrap; gap: 9px; }
+    body.modal-open { overflow: hidden; }
     .toast { position: fixed; right: 22px; bottom: 20px; z-index: 5; max-width: min(360px, calc(100vw - 32px)); padding: 12px 16px; border: 1px solid #d7cbe5; border-radius: 9px; background: var(--paper); box-shadow: var(--shadow); color: var(--purple-dark); font-size: 13px; opacity: 0; pointer-events: none; transform: translateY(8px); transition: .2s ease; }
     .toast.is-visible { opacity: 1; transform: translateY(0); }
     footer { padding: 20px 0 0; margin-top: 36px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; text-align: center; }
@@ -269,6 +281,7 @@
           <label><span class="hidden">Streaming service</span><select class="field" id="serviceFilter" aria-label="Filter by streaming service"><option value="all">All services</option></select></label>
           <label><span class="hidden">Title type</span><select class="field" id="typeFilter" aria-label="Filter by movie or TV show"><option value="all">Movies &amp; TV</option><option value="movie">Movies</option><option value="tv">TV shows</option></select></label>
           <label><span class="hidden">Watch status</span><select class="field" id="statusFilter" aria-label="Filter by watch status"><option value="all">Any status</option><option value="want">Want to Watch</option><option value="watching">Currently Watching</option><option value="finished">Finished</option></select></label>
+          <label><span class="hidden">Sort titles</span><select class="field" id="sortFilter" aria-label="Sort titles"><option value="recommended">Recommended</option><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="az">Title A-Z</option></select></label>
           <button class="clear-button" id="clearFilters" type="button">Clear filters</button>
         </div>
 
@@ -283,6 +296,17 @@
 
       <footer>SaveFlix is a personal organizer. Streaming availability shown here is demo data and does not connect to any service.</footer>
     </main>
+  </div>
+  <div class="modal-backdrop hidden" id="detailModal" role="presentation">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" type="button" aria-label="Close title details">&times;</button>
+      <div class="modal-hero" id="modalHero"><h2 id="modalTitle"></h2></div>
+      <div class="modal-body">
+        <p class="modal-meta" id="modalMeta"></p>
+        <p class="modal-description" id="modalDescription"></p>
+        <div class="modal-actions" id="modalActions"></div>
+      </div>
+    </section>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -363,10 +387,17 @@
     const serviceFilter = document.getElementById("serviceFilter");
     const typeFilter = document.getElementById("typeFilter");
     const statusFilter = document.getElementById("statusFilter");
+    const sortFilter = document.getElementById("sortFilter");
     const searchInput = document.getElementById("searchInput");
     const titleGrid = document.getElementById("titleGrid");
     const emptyState = document.getElementById("emptyState");
     const toast = document.getElementById("toast");
+    const detailModal = document.getElementById("detailModal");
+    const modalHero = document.getElementById("modalHero");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalMeta = document.getElementById("modalMeta");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalActions = document.getElementById("modalActions");
 
     function persistState() {
       try {
@@ -417,14 +448,37 @@
             <div class="card-meta"><span class="service-tag">${serviceById[item.service]}</span><span>${item.year} · ${item.type === "movie" ? "Movie" : "TV show"}</span></div>
             <h3 class="title-name">${item.title}</h3>
             <p class="description">${item.description}<br>${item.genre}</p>
-            <div class="card-actions">${action}${statusControl}</div>
+            <div class="card-actions"><button class="details-button" type="button" data-details="${item.id}">Details</button>${action}${statusControl}</div>
           </div>
         </article>`;
+    }
+
+    function openDetails(id) {
+      const item = catalogue.find((title) => title.id === id);
+      if (!item) return;
+      const saved = getSavedEntry(id);
+      modalHero.style.setProperty("--art", item.art);
+      modalTitle.textContent = item.title;
+      modalMeta.textContent = `${serviceById[item.service]} · ${item.year} · ${item.type === "movie" ? "Movie" : "TV show"} · ${item.genre}`;
+      modalDescription.textContent = item.description;
+      modalActions.innerHTML = `${saved
+        ? `<button class="save-button is-saved" type="button" data-action="remove" data-id="${item.id}">Remove from list</button>`
+        : `<button class="save-button" type="button" data-action="add" data-id="${item.id}">+ Add to list</button>`}
+        <span class="service-tag">Demo availability on ${serviceById[item.service]}</span>`;
+      detailModal.classList.remove("hidden");
+      document.body.classList.add("modal-open");
+      document.getElementById("modalClose").focus();
+    }
+
+    function closeDetails() {
+      detailModal.classList.add("hidden");
+      document.body.classList.remove("modal-open");
     }
 
     function render() {
       const query = searchInput.value.trim().toLocaleLowerCase();
       const selectedServices = new Set(state.selectedServices);
+      const savedGenres = new Set(state.watchlist.map((entry) => catalogue.find((item) => item.id === entry.id)?.genre).filter(Boolean));
       const searchMatches = (item) => `${item.title} ${item.genre} ${item.description} ${serviceById[item.service]}`.toLocaleLowerCase().includes(query);
       const results = catalogue.filter((item) => {
         const saved = getSavedEntry(item.id);
@@ -434,6 +488,11 @@
           && (typeFilter.value === "all" || item.type === typeFilter.value)
           && (statusFilter.value === "all" || (saved && saved.status === statusFilter.value))
           && searchMatches(item);
+      }).sort((first, second) => {
+        if (sortFilter.value === "newest") return second.year - first.year;
+        if (sortFilter.value === "oldest") return first.year - second.year;
+        if (sortFilter.value === "az") return first.title.localeCompare(second.title);
+        return Number(savedGenres.has(second.genre)) - Number(savedGenres.has(first.genre));
       });
 
       titleGrid.innerHTML = results.map(renderCard).join("");
@@ -451,7 +510,7 @@
       } else if (activeView === "watchlist" && state.watchlist.length === 0) {
         emptyTitle.textContent = "Your watchlist is ready when you are";
         emptyCopy.textContent = "Explore the demo catalogue and add a movie or show to keep it close.";
-      } else if (query || serviceFilter.value !== "all" || typeFilter.value !== "all" || statusFilter.value !== "all" || activeView === "watchlist") {
+      } else if (query || serviceFilter.value !== "all" || typeFilter.value !== "all" || statusFilter.value !== "all" || sortFilter.value !== "recommended" || activeView === "watchlist") {
         emptyTitle.textContent = activeView === "watchlist" ? "No saved titles match" : "No titles found";
         emptyCopy.textContent = "Try a different search or clear a filter to see more titles.";
       } else {
@@ -471,6 +530,15 @@
     }
 
     document.addEventListener("click", (event) => {
+      const detailsButton = event.target.closest("[data-details]");
+      if (detailsButton) {
+        openDetails(detailsButton.dataset.details);
+        return;
+      }
+      if (event.target === detailModal || event.target.closest("#modalClose")) {
+        closeDetails();
+        return;
+      }
       const viewButton = event.target.closest("[data-view]");
       if (viewButton) {
         changeView(viewButton.dataset.view);
@@ -490,8 +558,14 @@
         persistState();
         showToast(`${item.title} removed from your watchlist.`);
       }
+      if (!detailModal.classList.contains("hidden")) closeDetails();
       render();
     });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !detailModal.classList.contains("hidden")) closeDetails();
+    });
+
 
     document.addEventListener("change", (event) => {
       if (event.target.matches("#serviceOptions input[type='checkbox']")) {
@@ -506,7 +580,7 @@
           showToast(`Status updated: ${statuses[entry.status]}.`);
           render();
         }
-      } else if (event.target.matches("#serviceFilter, #typeFilter, #statusFilter")) {
+      } else if (event.target.matches("#serviceFilter, #typeFilter, #statusFilter, #sortFilter")) {
         render();
       }
     });
@@ -517,6 +591,7 @@
       serviceFilter.value = "all";
       typeFilter.value = "all";
       statusFilter.value = "all";
+      sortFilter.value = "recommended";
       render();
       searchInput.focus();
     });
