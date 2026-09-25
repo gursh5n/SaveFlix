@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#191716">
+  <title>SaveFlix | Your streaming shelf</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --cream: #fbf7ef;
+      --paper: #fffdf9;
+      --ink: #292333;
+      --muted: #77717f;
+      --purple: #6847a5;
+      --purple-dark: #4e347f;
+      --purple-light: #eee8f7;
+      --coral: #e98572;
+      --line: #e9e2d9;
+      --green: #557a63;
+      --shadow: 0 12px 32px rgba(53, 39, 68, .08);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      font-synthesis: none;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--cream);
+      color: var(--ink);
+    }
+
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+
+    .shell { width: min(1120px, calc(100% - 44px)); margin: 0 auto; }
+
+    .topbar {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+    .brand svg { width: 39px; height: 39px; flex: none; }
+    .brand-name { font: 700 22px/1 Georgia, serif; letter-spacing: 0; }
+    .top-links { display: flex; gap: 8px; }
+
+    .nav-button, .view-button {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      color: var(--muted);
+      transition: color .18s ease, background .18s ease, transform .18s ease;
+    }
+
+    .nav-button { padding: 10px 13px; border-radius: 8px; font-weight: 700; }
+    .nav-button:hover, .nav-button[aria-pressed="true"] { color: var(--purple-dark); background: var(--purple-light); }
+    button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(104, 71, 165, .3); outline-offset: 2px; }
+
+    main { padding: 34px 0 64px; }
+
+    .intro-row { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 23px; }
+    .eyebrow { margin: 0 0 8px; color: var(--purple); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 8px; font: 700 34px/1.1 Georgia, serif; letter-spacing: 0; }
+    .intro-copy { max-width: 540px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+    .saved-summary { flex: none; display: flex; align-items: center; gap: 9px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255, 253, 249, .7); color: var(--muted); font-size: 13px; }
+    .saved-summary strong { color: var(--purple-dark); font-size: 17px; }
+
+    .service-panel {
+      display: grid;
+      grid-template-columns: minmax(145px, 1fr) 3fr;
+      align-items: center;
+      gap: 16px;
+      padding: 15px 17px;
+      margin-bottom: 27px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--paper);
+    }
+
+    .service-heading { margin: 0; font-size: 13px; font-weight: 800; }
+    .service-heading span { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; font-weight: 500; }
+    .service-options { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+    .service-choice { position: relative; }
+    .service-choice input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .service-choice label { display: inline-flex; align-items: center; min-height: 34px; padding: 7px 11px; border: 1px solid var(--line); border-radius: 7px; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; transition: .18s ease; }
+    .service-choice label::before { width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: #c8c1cb; content: ""; }
+    .service-choice input:checked + label { border-color: #c8b8df; background: var(--purple-light); color: var(--purple-dark); }
+    .service-choice input:checked + label::before { background: var(--coral); }
+    .service-choice input:focus-visible + label { outline: 3px solid rgba(104, 71, 165, .3); outline-offset: 2px; }
+
+    .section-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+    .view-switch { display: inline-flex; gap: 3px; padding: 4px; border-radius: 9px; background: #f0ebe4; }
+    .view-button { padding: 9px 13px; border-radius: 7px; font-size: 13px; font-weight: 800; }
+    .view-button:hover { color: var(--purple-dark); }
+    .view-button[aria-pressed="true"] { background: var(--paper); color: var(--purple-dark); box-shadow: 0 1px 4px rgba(41, 35, 51, .1); }
+    .demo-label { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 11px; }
+    .demo-label::before { width: 6px; height: 6px; border-radius: 50%; background: var(--coral); content: ""; }
+
+    .filters { display: grid; grid-template-columns: minmax(220px, 1.7fr) repeat(3, minmax(130px, .85fr)) auto; gap: 9px; padding: 15px 0 18px; }
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; top: 12px; left: 12px; width: 17px; height: 17px; color: #928b97; pointer-events: none; }
+    .field, .search-input { width: 100%; height: 42px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); font-size: 12px; }
+    .field { padding: 0 30px 0 11px; }
+    .search-input { padding: 0 12px 0 37px; }
+    .search-input::placeholder { color: #99929d; }
+    .clear-button { padding: 0 10px; border: 0; background: transparent; color: var(--purple); cursor: pointer; font-size: 12px; font-weight: 800; white-space: nowrap; }
+    .clear-button:hover { color: var(--purple-dark); text-decoration: underline; }
+
+    .results-line { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; color: var(--muted); font-size: 12px; }
+    .results-line strong { color: var(--ink); }
+    .title-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .title-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 11px; background: var(--paper); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .title-card:hover { transform: translateY(-3px); border-color: #d8cbe8; box-shadow: var(--shadow); }
+    .poster { position: relative; display: flex; min-height: 180px; align-items: end; overflow: hidden; padding: 14px; isolation: isolate; color: white; background: var(--art); }
+    .poster::before, .poster::after { position: absolute; z-index: -1; border: 1px solid rgba(255,255,255,.27); border-radius: 50%; content: ""; }
+    .poster::before { width: 160px; height: 160px; top: -67px; right: -36px; }
+    .poster::after { width: 108px; height: 108px; top: -40px; right: -10px; }
+    .poster-mark { position: absolute; top: 15px; left: 15px; width: 35px; height: 35px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.58); border-radius: 50%; background: rgba(255,255,255,.14); font: 700 12px Georgia, serif; }
+    .poster-title { max-width: 95%; margin: 0; font: 700 22px/1.04 Georgia, serif; letter-spacing: 0; text-shadow: 0 1px 10px rgba(0,0,0,.2); }
+    .card-content { padding: 13px 14px 14px; }
+    .card-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; color: var(--muted); font-size: 11px; }
+    .service-tag { overflow: hidden; max-width: 70%; padding: 4px 7px; border-radius: 5px; background: #f2eee8; color: #5c5363; text-overflow: ellipsis; white-space: nowrap; }
+    .title-name { margin: 0 0 5px; font-size: 15px; line-height: 1.25; }
+    .description { min-height: 37px; margin: 0 0 12px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .card-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .save-button { min-height: 34px; padding: 0 10px; border: 1px solid var(--purple); border-radius: 7px; background: var(--purple); color: white; cursor: pointer; font-size: 11px; font-weight: 800; transition: background .18s ease, transform .18s ease; }
+    .save-button:hover { transform: translateY(-1px); background: var(--purple-dark); }
+    .save-button.is-saved { border-color: #d9cfe5; background: var(--purple-light); color: var(--purple-dark); }
+    .save-button.is-saved:hover { border-color: #c8b8df; background: #e5dcf1; }
+    .status-select { width: 100%; min-height: 34px; padding: 0 7px; border: 1px solid var(--line); border-radius: 7px; background: var(--paper); color: var(--purple-dark); font-size: 11px; font-weight: 700; }
+
+    .empty-state { padding: 58px 18px; border: 1px dashed #d8cbdc; border-radius: 11px; background: rgba(255,253,249,.55); text-align: center; }
+    .empty-icon { width: 44px; height: 44px; display: grid; place-items: center; margin: 0 auto 13px; border-radius: 50%; background: var(--purple-light); color: var(--purple); }
+    .empty-icon svg { width: 22px; height: 22px; }
+    .empty-state h2 { margin-bottom: 6px; font: 700 20px Georgia, serif; }
+    .empty-state p { max-width: 390px; margin: 0 auto; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .hidden { display: none !important; }
+    .toast { position: fixed; right: 22px; bottom: 20px; z-index: 5; max-width: min(360px, calc(100vw - 32px)); padding: 12px 16px; border: 1px solid #d7cbe5; border-radius: 9px; background: var(--paper); box-shadow: var(--shadow); color: var(--purple-dark); font-size: 13px; opacity: 0; pointer-events: none; transform: translateY(8px); transition: .2s ease; }
+    .toast.is-visible { opacity: 1; transform: translateY(0); }
+    footer { padding: 20px 0 0; margin-top: 36px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; text-align: center; }
+
+    @media (max-width: 900px) {
+      .title-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .filters { grid-template-columns: minmax(200px, 1.5fr) repeat(2, minmax(125px, 1fr)); }
+      .clear-button { min-height: 38px; text-align: left; }
+    }
+
+    @media (max-width: 620px) {
+      .shell { width: min(100% - 28px, 520px); }
+      .topbar { min-height: 70px; }
+      .brand-name { font-size: 20px; }
+      .nav-button { padding: 9px 8px; font-size: 12px; }
+      main { padding-top: 26px; }
+      .intro-row { align-items: start; flex-direction: column; gap: 14px; }
+      h1 { font-size: 30px; }
+      .saved-summary { align-self: stretch; justify-content: space-between; }
+      .service-panel { grid-template-columns: 1fr; gap: 11px; padding: 13px; }
+      .service-options { justify-content: flex-start; }
+      .service-choice label { padding-inline: 9px; font-size: 11px; }
+      .section-toolbar { align-items: flex-start; flex-direction: column; }
+      .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .search-wrap { grid-column: 1 / -1; }
+      .clear-button { grid-column: 1 / -1; padding: 5px 0; }
+      .title-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .poster { min-height: 145px; padding: 10px; }
+      .poster-title { font-size: 18px; }
+      .poster-mark { top: 11px; left: 11px; width: 30px; height: 30px; }
+      .card-content { padding: 10px; }
+      .card-meta { font-size: 10px; }
+      .title-name { font-size: 13px; }
+      .description { min-height: 48px; font-size: 10px; }
+      .save-button { padding: 0 7px; font-size: 10px; }
+      .status-select { font-size: 10px; }
+    }
+
+    @media (max-width: 360px) {
+      .shell { width: calc(100% - 20px); }
+      .brand svg { width: 34px; height: 34px; }
+      .brand-name { font-size: 18px; }
+      .nav-button { padding-inline: 6px; }
+      .title-grid { gap: 7px; }
+      .description { min-height: 60px; }
+    }
+
+    :root {
+      color-scheme: dark;
+      --cream: #191716;
+      --paper: #24211f;
+      --ink: #f6eee5;
+      --muted: #b8aaa0;
+      --purple: #f0ad5e;
+      --purple-dark: #ffc77b;
+      --purple-light: #382b22;
+      --coral: #f18469;
+      --line: #3e3732;
+      --green: #8eaa83;
+      --shadow: 0 14px 34px rgba(0, 0, 0, .28);
+    }
+
+    .saved-summary { background: rgba(255, 255, 255, .025); }
+    button:focus-visible, input:focus-visible, select:focus-visible,
+    .service-choice input:focus-visible + label { outline-color: rgba(240, 173, 94, .45); }
+    .service-choice label::before { background: #655b54; }
+    .service-choice input:checked + label, .save-button.is-saved { border-color: #80553d; }
+    .view-switch { background: #2c2825; }
+    .view-button[aria-pressed="true"] { background: #39332f; box-shadow: 0 1px 4px rgba(0, 0, 0, .2); }
+    .search-input::placeholder { color: #93877f; }
+    .title-card:hover { border-color: #80553d; }
+    .service-tag { background: #332e2a; color: #e4d7cb; }
+    .save-button.is-saved:hover { border-color: #a66e47; background: #473329; }
+    .empty-state { border-color: #59483d; background: rgba(255, 255, 255, .02); }
+    .toast { border-color: #80553d; background: #302923; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="SaveFlix home">
+        <svg viewBox="0 0 48 48" role="img" aria-label="SaveFlix logo" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 5.5h20a4 4 0 0 1 4 4V42L24 33.5 10 42V9.5a4 4 0 0 1 4-4z" fill="#f0ad5e"/>
+          <path d="M16 11h16a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V13a2 2 0 0 1 2-2z" fill="#302923"/>
+          <path d="M17 14v1m0 3v1m0 3v1m14-8v1m0 3v1m0 3v1" fill="none" stroke="#f0ad5e" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="m20.5 15.5 7.5 4.5-7.5 4.5z" fill="#f18469"/>
+        </svg>
+        <span class="brand-name">SaveFlix</span>
+      </a>
+      <nav class="top-links" aria-label="Main navigation">
+        <button class="nav-button" type="button" data-view="catalog" aria-pressed="true">Explore</button>
+        <button class="nav-button" type="button" data-view="watchlist" aria-pressed="false">My watchlist</button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="intro-row" aria-labelledby="pageTitle">
+        <div>
+          <p class="eyebrow">A little less scrolling, a lot more watching</p>
+          <h1 id="pageTitle">Find your next favorite.</h1>
+          <p class="intro-copy">Keep the good stuff from all your streaming services in one cozy place.</p>
+        </div>
+        <div class="saved-summary" aria-live="polite"><span>On your watchlist</span><strong id="savedCount">0</strong></div>
+      </section>
+
+      <section class="service-panel" aria-labelledby="serviceHeading">
+        <h2 class="service-heading" id="serviceHeading">Your services<span>Choose what you have</span></h2>
+        <div class="service-options" id="serviceOptions"></div>
+      </section>
+
+      <section aria-label="Movie and TV catalogue">
+        <div class="section-toolbar">
+          <div class="view-switch" role="group" aria-label="Choose catalogue view">
+            <button class="view-button" type="button" data-view="catalog" aria-pressed="true">Explore</button>
+            <button class="view-button" type="button" data-view="watchlist" aria-pressed="false">My watchlist</button>
+          </div>
+          <span class="demo-label">Demo catalogue and availability</span>
+        </div>
+
+        <div class="filters" aria-label="Catalogue filters">
+          <label class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+            <input class="search-input" id="searchInput" type="search" placeholder="Search titles, genres, or descriptions" autocomplete="off" aria-label="Search catalogue">
+          </label>
+          <label><span class="hidden">Streaming service</span><select class="field" id="serviceFilter" aria-label="Filter by streaming service"><option value="all">All services</option></select></label>
+          <label><span class="hidden">Title type</span><select class="field" id="typeFilter" aria-label="Filter by movie or TV show"><option value="all">Movies &amp; TV</option><option value="movie">Movies</option><option value="tv">TV shows</option></select></label>
+          <label><span class="hidden">Watch status</span><select class="field" id="statusFilter" aria-label="Filter by watch status"><option value="all">Any status</option><option value="want">Want to Watch</option><option value="watching">Currently Watching</option><option value="finished">Finished</option></select></label>
+          <button class="clear-button" id="clearFilters" type="button">Clear filters</button>
+        </div>
+
+        <div class="results-line"><span id="viewHeading"><strong>Browse the catalogue</strong></span><span id="resultCount" aria-live="polite">0 titles</span></div>
+        <div class="title-grid" id="titleGrid"></div>
+        <div class="empty-state hidden" id="emptyState" role="status">
+          <div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8.5c1.3 5 5.3 8 8 8s6.7-3 8-8M6.5 6.5c1.5 2.3 3.3 3.5 5.5 3.5s4-1.2 5.5-3.5"/><path d="m11 3 5 3-5 3z" fill="currentColor" stroke="none"/></svg></div>
+          <h2 id="emptyTitle">Nothing here just yet</h2>
+          <p id="emptyCopy">Try another search or adjust your filters.</p>
+        </div>
+      </section>
+
+      <footer>SaveFlix is a personal organizer. Streaming availability shown here is demo data and does not connect to any service.</footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    const services = [
+      { id: "netflix", name: "Netflix" },
+      { id: "hulu", name: "Hulu" },
+      { id: "disney", name: "Disney+" },
+      { id: "prime", name: "Prime Video" }
+    ];
+    const statuses = {
+      want: "Want to Watch",
+      watching: "Currently Watching",
+      finished: "Finished"
+    };
+    const storageKey = "watchnest-state-v1";
+    const catalogue = [
+      { id: "midnight-library", title: "The Midnight Library", type: "movie", year: 2023, genre: "Fantasy", service: "netflix", description: "A chance to explore the lives you might have lived.", mark: "ML", art: "linear-gradient(145deg,#453c68,#9a7190 58%,#e0a17e)" },
+      { id: "north-of-nowhere", title: "North of Nowhere", type: "tv", year: 2024, genre: "Mystery", service: "hulu", description: "A quiet coastal town keeps one enormous secret.", mark: "NN", art: "linear-gradient(145deg,#244b58,#4d7d78 58%,#d59a73)" },
+      { id: "paper-moons", title: "Paper Moons", type: "movie", year: 2022, genre: "Romance", service: "prime", description: "Two strangers trade letters across a changing city.", mark: "PM", art: "linear-gradient(145deg,#753f56,#c77c7a 55%,#f0b47d)" },
+      { id: "wild-atlas", title: "Wild Atlas", type: "tv", year: 2025, genre: "Documentary", service: "disney", description: "A field trip through the planet's most surprising habitats.", mark: "WA", art: "linear-gradient(145deg,#28594d,#6c9c68 58%,#d8b26f)" },
+      { id: "the-last-lantern", title: "The Last Lantern", type: "movie", year: 2021, genre: "Adventure", service: "netflix", description: "A mapmaker follows a fading light beyond the sea.", mark: "LL", art: "linear-gradient(145deg,#343f6d,#62639a 58%,#d78972)" },
+      { id: "second-nature", title: "Second Nature", type: "tv", year: 2023, genre: "Comedy", service: "hulu", description: "Roommates attempt a very imperfect fresh start.", mark: "SN", art: "linear-gradient(145deg,#667646,#9da668 58%,#d68b69)" },
+      { id: "velvet-comet", title: "Velvet Comet", type: "movie", year: 2024, genre: "Science Fiction", service: "prime", description: "A lonely radio operator hears a voice from deep space.", mark: "VC", art: "linear-gradient(145deg,#302f58,#695a91 58%,#c97878)" },
+      { id: "little-big-city", title: "Little Big City", type: "tv", year: 2022, genre: "Drama", service: "disney", description: "A neighborhood bakery becomes everyone's second home.", mark: "BC", art: "linear-gradient(145deg,#8b573f,#c78359 58%,#e7be81)" },
+      { id: "blue-hour", title: "Blue Hour", type: "movie", year: 2025, genre: "Thriller", service: "hulu", description: "A photographer catches something that should not be there.", mark: "BH", art: "linear-gradient(145deg,#243b58,#486b85 58%,#be7a74)" },
+      { id: "pocket-planet", title: "Pocket Planet", type: "tv", year: 2021, genre: "Family", service: "disney", description: "A curious crew finds a whole universe in the attic.", mark: "PP", art: "linear-gradient(145deg,#456273,#6c9eaa 58%,#e4aa74)" },
+      { id: "good-company", title: "Good Company", type: "movie", year: 2023, genre: "Comedy", service: "prime", description: "An unlikely team tries to save a beloved old cinema.", mark: "GC", art: "linear-gradient(145deg,#8b4f43,#ca8169 58%,#e8bd7d)" },
+      { id: "cedar-house", title: "Cedar House", type: "tv", year: 2024, genre: "Mystery", service: "netflix", description: "Three siblings return home and reopen an old case.", mark: "CH", art: "linear-gradient(145deg,#3e5547,#75836a 58%,#c89570)" },
+      { id: "orbiting-june", title: "Orbiting June", type: "movie", year: 2022, genre: "Science Fiction", service: "disney", description: "A young engineer finds friendship on a lunar station.", mark: "OJ", art: "linear-gradient(145deg,#3a3d72,#7772a5 58%,#d88c80)" },
+      { id: "recipe-for-rain", title: "Recipe for Rain", type: "tv", year: 2025, genre: "Romance", service: "hulu", description: "A chef returns home to restore her family's restaurant.", mark: "RR", art: "linear-gradient(145deg,#8c4e63,#c67d88 58%,#edb67e)" },
+      { id: "small-wonders", title: "Small Wonders", type: "movie", year: 2020, genre: "Documentary", service: "prime", description: "Everyday inventors make surprisingly big discoveries.", mark: "SW", art: "linear-gradient(145deg,#496d66,#84a588 58%,#e3b979)" },
+      { id: "after-the-storm", title: "After the Storm", type: "tv", year: 2023, genre: "Drama", service: "netflix", description: "A mountain rescue crew faces life beyond the summit.", mark: "AS", art: "linear-gradient(145deg,#425166,#8292a0 58%,#d28d73)" },
+      { id: "golden-hour-club", title: "Golden Hour Club", type: "movie", year: 2024, genre: "Adventure", service: "disney", description: "Friends reunite for one last summer-long treasure hunt.", mark: "GH", art: "linear-gradient(145deg,#7c5437,#c38c4d 58%,#f0c582)" },
+      { id: "static-between-us", title: "Static Between Us", type: "tv", year: 2022, genre: "Thriller", service: "prime", description: "A late-night call-in show receives a chilling message.", mark: "SU", art: "linear-gradient(145deg,#3d4057,#737387 58%,#c47a77)" },
+      { id: "moss-and-moonlight", title: "Moss & Moonlight", type: "movie", year: 2021, genre: "Fantasy", service: "hulu", description: "A botanist discovers a garden that appears after dark.", mark: "MM", art: "linear-gradient(145deg,#3e5749,#759777 58%,#d99d79)" },
+      { id: "day-trip", title: "Day Trip", type: "tv", year: 2025, genre: "Comedy", service: "netflix", description: "A mismatched tour group takes the scenic route, always.", mark: "DT", art: "linear-gradient(145deg,#61764f,#9cad71 58%,#e1a268)" },
+      { id: "the-long-weekend", title: "The Long Weekend", type: "movie", year: 2023, genre: "Mystery", service: "prime", description: "A lakeside reunion takes a turn after one lost key.", mark: "LW", art: "linear-gradient(145deg,#32535f,#66878b 58%,#d29773)" },
+      { id: "tiny-titans", title: "Tiny Titans", type: "tv", year: 2024, genre: "Family", service: "disney", description: "Small-town kids build big-hearted homemade heroes.", mark: "TT", art: "linear-gradient(145deg,#85544b,#c07b64 58%,#e6b579)" },
+      { id: "one-more-song", title: "One More Song", type: "movie", year: 2020, genre: "Romance", service: "hulu", description: "A musician and a radio host reconnect through old records.", mark: "OS", art: "linear-gradient(145deg,#654b68,#a1748b 58%,#e3a17b)" },
+      { id: "deep-current", title: "Deep Current", type: "tv", year: 2023, genre: "Documentary", service: "netflix", description: "Divers reveal the hidden lives of the world's oceans.", mark: "DC", art: "linear-gradient(145deg,#245866,#4a8a91 58%,#e2a675)" }
+    ];
+
+    const validIds = new Set(catalogue.map((item) => item.id));
+    const validServiceIds = new Set(services.map((service) => service.id));
+    const serviceById = Object.fromEntries(services.map((service) => [service.id, service.name]));
+
+    function loadState() {
+      const defaults = { selectedServices: services.map((service) => service.id), watchlist: [] };
+      try {
+        const stored = localStorage.getItem(storageKey);
+        if (!stored) return defaults;
+        const parsed = JSON.parse(stored);
+        if (!parsed || typeof parsed !== "object") return defaults;
+        const selectedServices = Array.isArray(parsed.selectedServices)
+          ? [...new Set(parsed.selectedServices.filter((id) => validServiceIds.has(id)))]
+          : defaults.selectedServices;
+        const seen = new Set();
+        const watchlist = Array.isArray(parsed.watchlist) ? parsed.watchlist.reduce((saved, entry) => {
+          if (entry && validIds.has(entry.id) && !seen.has(entry.id)) {
+            seen.add(entry.id);
+            saved.push({ id: entry.id, status: Object.hasOwn(statuses, entry.status) ? entry.status : "want" });
+          }
+          return saved;
+        }, []) : [];
+        return { selectedServices, watchlist };
+      } catch {
+        return defaults;
+      }
+    }
+
+    const state = loadState();
+    let activeView = "catalog";
+    let toastTimer;
+    const serviceOptions = document.getElementById("serviceOptions");
+    const serviceFilter = document.getElementById("serviceFilter");
+    const typeFilter = document.getElementById("typeFilter");
+    const statusFilter = document.getElementById("statusFilter");
+    const searchInput = document.getElementById("searchInput");
+    const titleGrid = document.getElementById("titleGrid");
+    const emptyState = document.getElementById("emptyState");
+    const toast = document.getElementById("toast");
+
+    function persistState() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(state));
+        return true;
+      } catch {
+        showToast("This browser could not save your changes.");
+        return false;
+      }
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove("is-visible"), 2400);
+    }
+
+    function getSavedEntry(id) {
+      return state.watchlist.find((entry) => entry.id === id);
+    }
+
+    function renderServices() {
+      serviceOptions.innerHTML = services.map((service) => `
+        <span class="service-choice">
+          <input type="checkbox" id="service-${service.id}" value="${service.id}" ${state.selectedServices.includes(service.id) ? "checked" : ""}>
+          <label for="service-${service.id}">${service.name}</label>
+        </span>`).join("");
+      serviceFilter.innerHTML = '<option value="all">All services</option>' + services.map((service) =>
+        `<option value="${service.id}">${service.name}</option>`).join("");
+    }
+
+    function renderCard(item) {
+      const saved = getSavedEntry(item.id);
+      const action = saved
+        ? `<button class="save-button is-saved" type="button" data-action="remove" data-id="${item.id}" aria-label="Remove ${item.title} from watchlist">In your list</button>`
+        : `<button class="save-button" type="button" data-action="add" data-id="${item.id}" aria-label="Add ${item.title} to watchlist">+ Add to list</button>`;
+      const statusControl = saved
+        ? `<select class="status-select" data-id="${item.id}" aria-label="Watch status for ${item.title}">${Object.entries(statuses).map(([key, label]) => `<option value="${key}" ${saved.status === key ? "selected" : ""}>${label}</option>`).join("")}</select>`
+        : "";
+      return `
+        <article class="title-card">
+          <div class="poster" style="--art:${item.art}" role="img" aria-label="Colorful poster placeholder for ${item.title}">
+            <span class="poster-mark" aria-hidden="true">${item.mark}</span>
+            <p class="poster-title" aria-hidden="true">${item.title}</p>
+          </div>
+          <div class="card-content">
+            <div class="card-meta"><span class="service-tag">${serviceById[item.service]}</span><span>${item.year} · ${item.type === "movie" ? "Movie" : "TV show"}</span></div>
+            <h3 class="title-name">${item.title}</h3>
+            <p class="description">${item.description}<br>${item.genre}</p>
+            <div class="card-actions">${action}${statusControl}</div>
+          </div>
+        </article>`;
+    }
+
+    function render() {
+      const query = searchInput.value.trim().toLocaleLowerCase();
+      const selectedServices = new Set(state.selectedServices);
+      const searchMatches = (item) => `${item.title} ${item.genre} ${item.description} ${serviceById[item.service]}`.toLocaleLowerCase().includes(query);
+      const results = catalogue.filter((item) => {
+        const saved = getSavedEntry(item.id);
+        return (activeView !== "watchlist" || Boolean(saved))
+          && selectedServices.has(item.service)
+          && (serviceFilter.value === "all" || item.service === serviceFilter.value)
+          && (typeFilter.value === "all" || item.type === typeFilter.value)
+          && (statusFilter.value === "all" || (saved && saved.status === statusFilter.value))
+          && searchMatches(item);
+      });
+
+      titleGrid.innerHTML = results.map(renderCard).join("");
+      titleGrid.classList.toggle("hidden", results.length === 0);
+      emptyState.classList.toggle("hidden", results.length !== 0);
+      document.getElementById("savedCount").textContent = String(state.watchlist.length);
+      document.getElementById("resultCount").textContent = `${results.length} ${results.length === 1 ? "title" : "titles"}`;
+      document.getElementById("viewHeading").innerHTML = `<strong>${activeView === "watchlist" ? "Your watchlist" : "Browse the catalogue"}</strong>`;
+
+      const emptyTitle = document.getElementById("emptyTitle");
+      const emptyCopy = document.getElementById("emptyCopy");
+      if (state.selectedServices.length === 0) {
+        emptyTitle.textContent = "Choose a streaming service";
+        emptyCopy.textContent = "Select at least one service above to see its demo catalogue.";
+      } else if (activeView === "watchlist" && state.watchlist.length === 0) {
+        emptyTitle.textContent = "Your watchlist is ready when you are";
+        emptyCopy.textContent = "Explore the demo catalogue and add a movie or show to keep it close.";
+      } else if (query || serviceFilter.value !== "all" || typeFilter.value !== "all" || statusFilter.value !== "all" || activeView === "watchlist") {
+        emptyTitle.textContent = activeView === "watchlist" ? "No saved titles match" : "No titles found";
+        emptyCopy.textContent = "Try a different search or clear a filter to see more titles.";
+      } else {
+        emptyTitle.textContent = "No titles available";
+        emptyCopy.textContent = "Choose another streaming service to browse its demo catalogue.";
+      }
+
+      document.querySelectorAll("[data-view]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.view === activeView));
+      });
+    }
+
+    function changeView(view) {
+      activeView = view;
+      render();
+      document.querySelector(".section-toolbar").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    document.addEventListener("click", (event) => {
+      const viewButton = event.target.closest("[data-view]");
+      if (viewButton) {
+        changeView(viewButton.dataset.view);
+        return;
+      }
+      const actionButton = event.target.closest("[data-action]");
+      if (!actionButton) return;
+      const { id, action } = actionButton.dataset;
+      const item = catalogue.find((title) => title.id === id);
+      if (!item) return;
+      if (action === "add" && !getSavedEntry(id)) {
+        state.watchlist.push({ id, status: "want" });
+        persistState();
+        showToast(`${item.title} added to your watchlist.`);
+      } else if (action === "remove") {
+        state.watchlist = state.watchlist.filter((entry) => entry.id !== id);
+        persistState();
+        showToast(`${item.title} removed from your watchlist.`);
+      }
+      render();
+    });
+
+    document.addEventListener("change", (event) => {
+      if (event.target.matches("#serviceOptions input[type='checkbox']")) {
+        state.selectedServices = [...serviceOptions.querySelectorAll("input:checked")].map((input) => input.value);
+        persistState();
+        render();
+      } else if (event.target.matches(".status-select")) {
+        const entry = getSavedEntry(event.target.dataset.id);
+        if (entry && Object.hasOwn(statuses, event.target.value)) {
+          entry.status = event.target.value;
+          persistState();
+          showToast(`Status updated: ${statuses[entry.status]}.`);
+          render();
+        }
+      } else if (event.target.matches("#serviceFilter, #typeFilter, #statusFilter")) {
+        render();
+      }
+    });
+
+    searchInput.addEventListener("input", render);
+    document.getElementById("clearFilters").addEventListener("click", () => {
+      searchInput.value = "";
+      serviceFilter.value = "all";
+      typeFilter.value = "all";
+      statusFilter.value = "all";
+      render();
+      searchInput.focus();
+    });
+
+    renderServices();
+    render();
+  </script>
+</body>
+</html>
