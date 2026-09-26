@@ -90,9 +90,7 @@
     .service-choice { position: relative; }
     .service-choice input { position: absolute; width: 1px; height: 1px; opacity: 0; }
     .service-choice label { display: inline-flex; align-items: center; min-height: 34px; padding: 7px 11px; border: 1px solid var(--line); border-radius: 7px; color: var(--muted); cursor: pointer; font-size: 12px; font-weight: 700; transition: .18s ease; }
-    .service-choice label::before { width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: #c8c1cb; content: ""; }
     .service-choice input:checked + label { border-color: #c8b8df; background: var(--purple-light); color: var(--purple-dark); }
-    .service-choice input:checked + label::before { background: var(--coral); }
     .service-choice input:focus-visible + label { outline: 3px solid rgba(104, 71, 165, .3); outline-offset: 2px; }
 
     .section-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
@@ -100,8 +98,6 @@
     .view-button { padding: 9px 13px; border-radius: 7px; font-size: 13px; font-weight: 800; }
     .view-button:hover { color: var(--purple-dark); }
     .view-button[aria-pressed="true"] { background: var(--paper); color: var(--purple-dark); box-shadow: 0 1px 4px rgba(41, 35, 51, .1); }
-    .demo-label { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 11px; }
-    .demo-label::before { width: 6px; height: 6px; border-radius: 50%; background: var(--coral); content: ""; }
 
     .filters { display: grid; grid-template-columns: minmax(220px, 1.7fr) repeat(4, minmax(130px, .85fr)) auto; gap: 9px; padding: 15px 0 18px; }
     .search-wrap { position: relative; }
@@ -122,7 +118,6 @@
     .poster::before, .poster::after { position: absolute; z-index: -1; border: 1px solid rgba(255,255,255,.27); border-radius: 50%; content: ""; }
     .poster::before { width: 160px; height: 160px; top: -67px; right: -36px; }
     .poster::after { width: 108px; height: 108px; top: -40px; right: -10px; }
-    .poster-mark { position: absolute; top: 15px; left: 15px; width: 35px; height: 35px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.58); border-radius: 50%; background: rgba(255,255,255,.14); font: 700 12px Georgia, serif; }
     .poster-title { max-width: 95%; margin: 0; font: 700 22px/1.04 Georgia, serif; letter-spacing: 0; text-shadow: 0 1px 10px rgba(0,0,0,.2); }
     .card-content { padding: 13px 14px 14px; }
     .card-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; color: var(--muted); font-size: 11px; }
@@ -158,17 +153,98 @@
     .toast.is-visible { opacity: 1; transform: translateY(0); }
     footer { padding: 20px 0 0; margin-top: 36px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; text-align: center; }
 
+    .topbar { position: relative; gap: 12px; }
+    .menu-toggle, .account-trigger { width: 42px; height: 42px; display: grid; flex: none; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); cursor: pointer; }
+    .menu-toggle svg { width: 20px; height: 20px; }
+    .brand { position: absolute; left: 50%; margin: 0; transform: translateX(-50%); }
+    .top-links { display: none; }
+    .account-area { position: relative; }
+    .account-trigger { overflow: hidden; border-color: #80553d; background: #3c3028; color: #ffd49c; font-size: 12px; font-weight: 800; }
+    .account-trigger img { width: 100%; height: 100%; object-fit: cover; }
+    .account-menu { position: absolute; top: calc(100% + 10px); right: 0; z-index: 8; width: min(310px, calc(100vw - 28px)); max-height: calc(100vh - 92px); overflow: auto; padding: 15px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); box-shadow: var(--shadow); }
+    .account-menu h2 { margin: 0 0 11px; font-size: 14px; }
+    .account-menu label { display: block; margin: 11px 0 5px; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .account-menu select, .account-menu input:not([type="file"]) { width: 100%; min-height: 38px; padding: 0 9px; border: 1px solid var(--line); border-radius: 7px; background: var(--cream); color: var(--ink); }
+    .account-menu .account-copy { margin: 0 0 12px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .account-menu .account-copy strong { color: var(--ink); }
+    .account-menu input:disabled, .account-menu button:disabled { cursor: not-allowed; opacity: .55; }
+    .account-menu .username-display { margin: -4px 0 12px; color: var(--purple-dark); font-size: 12px; font-weight: 800; }
+    .account-menu .field-note { margin: 5px 0; color: var(--muted); font-size: 10px; line-height: 1.4; }
+    .account-menu .account-error { color: #e18472; }
+    .account-menu .account-success { color: var(--green); }
+    .account-menu .file-input { min-height: auto !important; padding: 7px !important; font-size: 10px; }
+    .account-menu .menu-action { width: 100%; min-height: 36px; margin-top: 9px; border: 1px solid var(--line); border-radius: 7px; background: transparent; color: var(--ink); cursor: pointer; font-size: 12px; font-weight: 700; }
+    .account-menu .menu-action.primary { border-color: #80553d; background: #80553d; color: white; }
+    .menu-rule { height: 1px; margin: 14px 0; background: var(--line); }
+    .account-message { min-height: 15px; margin: 7px 0 0; color: var(--green); font-size: 11px; }
+    .service-choice label { gap: 7px; }
+    .service-tag { display: inline-flex; align-items: center; gap: 5px; }
+    .service-mark-wrap { display: inline-flex; flex: none; align-items: center; gap: 5px; }
+    .rating-row { display: flex; align-items: center; justify-content: space-between; gap: 5px; min-height: 30px; margin: 0 0 10px; }
+    .rating-label { color: var(--muted); font-size: 10px; white-space: nowrap; }
+    .rating-stars { display: inline-flex; align-items: center; gap: 1px; }
+    .rating-star { width: 22px; height: 26px; padding: 0; border: 0; background: transparent; color: #655b54; cursor: pointer; font-size: 19px; line-height: 1; }
+    .rating-star.is-active { color: var(--rating-color); }
+    .rating-star:hover, .rating-star:focus-visible { color: var(--rating-color); transform: scale(1.12); }
+    .rating-stars[data-rating="1"], .rating-stars[data-rating="2"] { --rating-color: #e46656; }
+    .rating-stars[data-rating="3"] { --rating-color: #e6a43e; }
+    .rating-stars[data-rating="4"] { --rating-color: #b8c84f; }
+    .rating-stars[data-rating="5"] { --rating-color: #62bd78; }
+    .friends-section { padding-top: 32px; margin-top: 38px; border-top: 1px solid var(--line); }
+    .friends-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 15px; }
+    .friends-heading h2 { margin: 0; font: 700 23px Georgia, serif; }
+    .friends-heading p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .friend-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .friend-card { display: flex; align-items: center; gap: 11px; min-width: 0; padding: 13px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); }
+    .friend-avatar { width: 39px; height: 39px; display: grid; flex: none; place-items: center; border-radius: 50%; background: var(--friend-color, #80553d); color: white; font-size: 12px; font-weight: 800; }
+    .friend-info { min-width: 0; flex: 1; }
+    .friend-info strong { display: block; overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+    .friend-info span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .friend-add { min-height: 31px; padding: 0 9px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--purple-dark); cursor: pointer; font-size: 10px; font-weight: 800; }
+    .friend-add[aria-pressed="true"] { border-color: #80553d; background: #3c3028; color: #ffd49c; }
+    .menu-toggle[aria-expanded="true"] { color: var(--purple-dark); }
+    #navMenu { left: 0; right: auto; display: grid; width: min(240px, calc(100vw - 28px)); gap: 5px; padding: 10px; border-radius: 6px; opacity: 1; transform: translateX(0); transition: opacity .2s ease, transform .2s ease, visibility .2s ease; }
+    #navMenu .menu-action { margin: 0; border-radius: 5px; text-align: left; }
+    #navMenu.hidden { display: grid !important; visibility: hidden; pointer-events: none; opacity: 0; transform: translateX(-18px); }
+    .account-menu:not(#navMenu) { opacity: 1; transform: translateX(0); transition: opacity .2s ease, transform .2s ease, visibility .2s ease; }
+    .account-menu.hidden:not(#navMenu) { display: block !important; visibility: hidden; pointer-events: none; opacity: 0; transform: translateX(-18px); }
+    .friend-card .friend-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .friend-request { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 11px; }
+    .friend-request:last-child { border-bottom: 0; }
+    .request-actions { display: flex; gap: 5px; }
+    .request-actions button { min-height: 28px; padding: 0 7px; border: 1px solid var(--line); border-radius: 5px; background: transparent; color: var(--ink); cursor: pointer; font-size: 10px; font-weight: 700; }
+    .request-actions .accept-request { border-color: #557a63; background: #557a63; color: white; }
+    .recommendation-modal { width: min(650px, 100%); }
+    .recommendation-modal .modal-body { padding-top: 15px; }
+    .recommendation-list { display: grid; gap: 10px; }
+    .recommendation-item { display: grid; grid-template-columns: 68px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+    .recommendation-art { min-height: 78px; display: flex; align-items: end; padding: 6px; border-radius: 5px; color: white; background: var(--art); font: 700 11px Georgia, serif; }
+    .recommendation-item h3 { margin: 0 0 4px; font-size: 13px; }
+    .recommendation-item p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.45; }
+    .recommendation-empty { padding: 22px 8px; color: var(--muted); font-size: 13px; text-align: center; }
+    .recommendation-modal .modal-close { border-color: var(--line); background: var(--paper); color: var(--ink); }
+    .recommend-select { min-height: 34px; padding: 0 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); font-size: 11px; }
+    .service-logo-image { display: block; width: 24px; height: 24px; flex: none; aspect-ratio: 1; border-radius: 5px; object-fit: contain; }
+
+    @media (prefers-reduced-motion: reduce) {
+      #navMenu, .account-menu:not(#navMenu) { transition: none; }
+    }
+
     @media (max-width: 900px) {
       .title-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .filters { grid-template-columns: minmax(200px, 1.5fr) repeat(2, minmax(125px, 1fr)); }
       .clear-button { min-height: 38px; text-align: left; }
+      .friend-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .recommendation-item { grid-template-columns: 58px minmax(0, 1fr); }
+      .recommendation-item .save-button { grid-column: 2; justify-self: start; }
     }
 
     @media (max-width: 620px) {
       .shell { width: min(100% - 28px, 520px); }
       .topbar { min-height: 70px; }
+      .topbar { gap: 8px; }
       .brand-name { font-size: 20px; }
-      .nav-button { padding: 9px 8px; font-size: 12px; }
+      .menu-toggle, .account-trigger { width: 38px; height: 38px; }
       main { padding-top: 26px; }
       .intro-row { align-items: start; flex-direction: column; gap: 14px; }
       h1 { font-size: 30px; }
@@ -183,13 +259,16 @@
       .title-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
       .poster { min-height: 145px; padding: 10px; }
       .poster-title { font-size: 18px; }
-      .poster-mark { top: 11px; left: 11px; width: 30px; height: 30px; }
       .card-content { padding: 10px; }
       .card-meta { font-size: 10px; }
       .title-name { font-size: 13px; }
       .description { min-height: 48px; font-size: 10px; }
       .save-button { padding: 0 7px; font-size: 10px; }
       .status-select { font-size: 10px; }
+      .rating-row { align-items: flex-start; flex-direction: column; gap: 1px; }
+      .rating-star { width: 20px; }
+      .friend-grid { grid-template-columns: 1fr; }
+      .friends-heading { align-items: flex-start; flex-direction: column; }
     }
 
     @media (max-width: 360px) {
@@ -219,7 +298,6 @@
     .saved-summary { background: rgba(255, 255, 255, .025); }
     button:focus-visible, input:focus-visible, select:focus-visible,
     .service-choice input:focus-visible + label { outline-color: rgba(240, 173, 94, .45); }
-    .service-choice label::before { background: #655b54; }
     .service-choice input:checked + label, .save-button.is-saved { border-color: #80553d; }
     .view-switch { background: #2c2825; }
     .view-button[aria-pressed="true"] { background: #39332f; box-shadow: 0 1px 4px rgba(0, 0, 0, .2); }
@@ -234,6 +312,9 @@
 <body>
   <div class="shell">
     <header class="topbar">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
       <a class="brand" href="#top" aria-label="SaveFlix home">
         <svg viewBox="0 0 48 48" role="img" aria-label="SaveFlix logo" xmlns="http://www.w3.org/2000/svg">
           <path d="M14 5.5h20a4 4 0 0 1 4 4V42L24 33.5 10 42V9.5a4 4 0 0 1 4-4z" fill="#f0ad5e"/>
@@ -247,6 +328,57 @@
         <button class="nav-button" type="button" data-view="catalog" aria-pressed="true">Explore</button>
         <button class="nav-button" type="button" data-view="watchlist" aria-pressed="false">My watchlist</button>
       </nav>
+      <nav class="account-menu hidden" id="navMenu" aria-label="Main navigation">
+        <button class="menu-action" type="button" data-view="catalog">Explore titles</button>
+        <button class="menu-action" type="button" data-view="watchlist">My watchlist</button>
+        <button class="menu-action" type="button" data-open-recommendations>Friends' recommendations</button>
+        <button class="menu-action" type="button" data-scroll="friendListSection">Your friends</button>
+      </nav>
+      <div class="account-area">
+        <button class="account-trigger" id="accountTrigger" type="button" aria-label="Open account menu" aria-expanded="false" aria-controls="accountMenu"><span id="avatarContent">?</span></button>
+        <div class="account-menu hidden" id="accountMenu">
+          <h2 id="accountHeading">Your account</h2>
+          <div id="authPanel">
+            <p class="account-copy" id="authMessage">Sign in or create an account to connect with friends.</p>
+            <label for="authEmail">Email</label>
+            <input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com">
+            <label for="authPassword">Password</label>
+            <input id="authPassword" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters">
+            <div id="signupFields">
+              <label for="signupUsername">Username</label>
+              <input id="signupUsername" type="text" maxlength="20" autocomplete="username" placeholder="yourname">
+              <p class="field-note">Your unique handle will be @yourname. Use 3-20 letters, numbers, or underscores.</p>
+              <label for="signupDisplayName">Display name</label>
+              <input id="signupDisplayName" type="text" maxlength="32" autocomplete="name" placeholder="Your name">
+            </div>
+            <button class="menu-action primary" id="authSubmit" type="button">Create account</button>
+            <button class="menu-action" id="authModeToggle" type="button">Already have an account? Sign in</button>
+          </div>
+          <div id="accountProfile" class="hidden">
+            <p class="username-display" id="accountHandle"></p>
+            <div class="menu-rule"></div>
+            <h3>Account settings</h3>
+            <label for="displayNameInput">Display name</label>
+            <input id="displayNameInput" type="text" maxlength="32" autocomplete="name">
+            <button class="menu-action primary" id="saveDisplayName" type="button">Save display name</button>
+            <label for="usernameInput">Change username</label>
+            <input id="usernameInput" type="text" maxlength="20" autocomplete="off" placeholder="newusername">
+            <p class="field-note" id="usernameLimitNote">Usernames can be changed twice every 14 days.</p>
+            <button class="menu-action" id="saveUsername" type="button">Update @username</button>
+            <label for="avatarInput">Profile picture</label>
+            <input class="file-input" id="avatarInput" type="file" accept="image/png,image/jpeg,image/webp">
+            <p class="field-note">PNG, JPG, or WebP only. Cropped and resized to 256 × 256; GIFs are not accepted.</p>
+            <div class="menu-rule"></div>
+            <h3>Add a friend by username</h3>
+            <label for="lookupUsername">Their @username</label>
+            <input id="lookupUsername" type="text" maxlength="21" autocomplete="off" placeholder="@username">
+            <button class="menu-action primary" id="lookupUser" type="button">Find username</button>
+            <div id="lookupResult" class="field-note" aria-live="polite"></div>
+            <div id="friendRequests"></div>
+            <button class="menu-action" id="signOutButton" type="button">Sign out</button>
+          </div>
+        </div>
+      </div>
     </header>
 
     <main id="top">
@@ -270,7 +402,6 @@
             <button class="view-button" type="button" data-view="catalog" aria-pressed="true">Explore</button>
             <button class="view-button" type="button" data-view="watchlist" aria-pressed="false">My watchlist</button>
           </div>
-          <span class="demo-label">Demo catalogue and availability</span>
         </div>
 
         <div class="filters" aria-label="Catalogue filters">
@@ -294,6 +425,13 @@
         </div>
       </section>
 
+      <section class="friends-section" id="friendListSection" aria-labelledby="friendsHeading">
+        <div class="friends-heading">
+          <div><p class="eyebrow">Your circle</p><h2 id="friendsHeading">Your friends</h2><p>Manage connections by their unique @username from your account menu.</p></div>
+        </div>
+        <div class="friend-grid" id="friendGrid"></div>
+      </section>
+
       <footer>SaveFlix is a personal organizer. Streaming availability shown here is demo data and does not connect to any service.</footer>
     </main>
   </div>
@@ -308,16 +446,33 @@
       </div>
     </section>
   </div>
+  <div class="modal-backdrop hidden" id="recommendationsModal" role="presentation">
+    <section class="modal recommendation-modal" role="dialog" aria-modal="true" aria-labelledby="recommendationsTitle">
+      <button class="modal-close" id="recommendationsClose" type="button" aria-label="Close recommendations">&times;</button>
+      <div class="modal-body">
+        <p class="eyebrow">Picked for your watchlist</p>
+        <h2 id="recommendationsTitle">Friends' recommendations</h2>
+        <p class="modal-description">Movies and shows your friends have recommended to you.</p>
+        <div class="recommendation-list" id="recommendationFeed" aria-live="polite"></div>
+      </div>
+    </section>
+  </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     "use strict";
 
+    const SUPABASE_URL = "YOUR_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+    const supabaseClient = window.supabase?.createClient && SUPABASE_URL.startsWith("https://") && SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY"
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
     const services = [
-      { id: "netflix", name: "Netflix" },
-      { id: "hulu", name: "Hulu" },
-      { id: "disney", name: "Disney+" },
-      { id: "prime", name: "Prime Video" }
+      { id: "netflix", name: "Netflix", mark: "N", logo: "netflix.svg" },
+      { id: "hulu", name: "Hulu", mark: "hulu", logo: "hulu.svg" },
+      { id: "disney", name: "Disney+", mark: "D+", logo: "disney-plus.svg" },
+      { id: "prime", name: "Prime Video", mark: "prime", logo: "prime-video.svg" }
     ];
     const statuses = {
       want: "Want to Watch",
@@ -325,6 +480,10 @@
       finished: "Finished"
     };
     const storageKey = "watchnest-state-v1";
+    const socialState = { profile: null, friends: [], requests: [], recommendations: [], usernameChangesRemaining: 2 };
+    let currentUser = null;
+    let authMode = "signup";
+    let foundUser = null;
     const catalogue = [
       { id: "midnight-library", title: "The Midnight Library", type: "movie", year: 2023, genre: "Fantasy", service: "netflix", description: "A chance to explore the lives you might have lived.", mark: "ML", art: "linear-gradient(145deg,#453c68,#9a7190 58%,#e0a17e)" },
       { id: "north-of-nowhere", title: "North of Nowhere", type: "tv", year: 2024, genre: "Mystery", service: "hulu", description: "A quiet coastal town keeps one enormous secret.", mark: "NN", art: "linear-gradient(145deg,#244b58,#4d7d78 58%,#d59a73)" },
@@ -357,7 +516,7 @@
     const serviceById = Object.fromEntries(services.map((service) => [service.id, service.name]));
 
     function loadState() {
-      const defaults = { selectedServices: services.map((service) => service.id), watchlist: [] };
+      const defaults = { selectedServices: services.map((service) => service.id), watchlist: [], ratings: {} };
       try {
         const stored = localStorage.getItem(storageKey);
         if (!stored) return defaults;
@@ -374,7 +533,10 @@
           }
           return saved;
         }, []) : [];
-        return { selectedServices, watchlist };
+        const ratings = parsed.ratings && typeof parsed.ratings === "object" ? Object.fromEntries(
+          Object.entries(parsed.ratings).filter(([id, rating]) => validIds.has(id) && Number.isInteger(rating) && rating >= 1 && rating <= 5)
+        ) : {};
+        return { selectedServices, watchlist, ratings };
       } catch {
         return defaults;
       }
@@ -398,6 +560,10 @@
     const modalMeta = document.getElementById("modalMeta");
     const modalDescription = document.getElementById("modalDescription");
     const modalActions = document.getElementById("modalActions");
+    const accountMenu = document.getElementById("accountMenu");
+    const navMenu = document.getElementById("navMenu");
+    const recommendationsModal = document.getElementById("recommendationsModal");
+    const recommendationFeed = document.getElementById("recommendationFeed");
 
     function persistState() {
       try {
@@ -420,11 +586,275 @@
       return state.watchlist.find((entry) => entry.id === id);
     }
 
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
+    }
+
+    function serviceLogo(id) {
+      const service = services.find((entry) => entry.id === id);
+      return `<span class="service-mark-wrap"><img class="service-logo-image" src="assets/streaming-services/${service.logo}" alt="${service.name} logo"></span>`;
+    }
+
+    function renderAccount() {
+      const avatarContent = document.getElementById("avatarContent");
+      const profile = socialState.profile;
+      const displayName = profile?.display_name || "Your account";
+      avatarContent.innerHTML = profile?.avatar_url ? `<img src="${escapeHtml(profile.avatar_url)}" alt="">` : escapeHtml(displayName === "Your account" ? "?" : displayName.slice(0, 1).toLocaleUpperCase());
+      document.getElementById("accountTrigger").setAttribute("aria-label", currentUser ? `Open account menu for @${profile?.username || "your account"}` : "Sign in or create an account");
+      document.getElementById("accountHeading").textContent = currentUser ? displayName : "Your account";
+      document.getElementById("authPanel").classList.toggle("hidden", Boolean(currentUser));
+      document.getElementById("accountProfile").classList.toggle("hidden", !currentUser);
+      document.getElementById("authSubmit").disabled = !supabaseClient;
+      document.getElementById("authModeToggle").disabled = !supabaseClient;
+      document.getElementById("signupFields").classList.toggle("hidden", authMode !== "signup");
+      document.getElementById("authSubmit").textContent = authMode === "signup" ? "Create account" : "Sign in";
+      document.getElementById("authModeToggle").textContent = authMode === "signup" ? "Already have an account? Sign in" : "New to SaveFlix? Create an account";
+      document.getElementById("authPassword").autocomplete = authMode === "signup" ? "new-password" : "current-password";
+      if (!supabaseClient) {
+        document.getElementById("authMessage").textContent = "Connect a Supabase project to enable shared accounts and friend recommendations. See README.md for setup.";
+      }
+      document.getElementById("accountHandle").textContent = profile ? `@${profile.username}` : "";
+      document.getElementById("displayNameInput").value = profile?.display_name || "";
+      document.getElementById("usernameInput").value = profile?.username || "";
+      document.getElementById("usernameLimitNote").textContent = `${socialState.usernameChangesRemaining} username change${socialState.usernameChangesRemaining === 1 ? "" : "s"} remaining in the current 14-day window.`;
+      document.getElementById("saveUsername").disabled = !supabaseClient || socialState.usernameChangesRemaining === 0;
+      renderFriendRequests();
+    }
+
+    function renderFriends() {
+      const friends = socialState.friends;
+      document.getElementById("friendGrid").innerHTML = friends.length ? friends.map((friend) => {
+        const initials = (friend.display_name || friend.username).slice(0, 1).toLocaleUpperCase();
+        const avatar = friend.avatar_url ? `<img src="${escapeHtml(friend.avatar_url)}" alt="">` : escapeHtml(initials);
+        return `<article class="friend-card"><span class="friend-avatar" aria-hidden="true">${avatar}</span><span class="friend-info"><strong>${escapeHtml(friend.display_name)}</strong><span>@${escapeHtml(friend.username)}</span></span></article>`;
+      }).join("") : "";
+      document.getElementById("friendGrid").classList.toggle("hidden", friends.length === 0);
+      if (!friends.length) {
+        document.getElementById("friendGrid").innerHTML = '<p class="field-note">Sign in and add friends by their unique @username to see them here.</p>';
+        document.getElementById("friendGrid").classList.remove("hidden");
+      }
+    }
+
+    function renderFriendRequests() {
+      const requests = socialState.requests;
+      document.getElementById("friendRequests").innerHTML = requests.length ? `<div class="menu-rule"></div><h3>Friend requests</h3>${requests.map((request) => request.is_incoming
+        ? `<div class="friend-request"><span>${escapeHtml(request.display_name)} <strong>@${escapeHtml(request.username)}</strong></span><span class="request-actions"><button class="accept-request" type="button" data-request="accept" data-id="${request.id}">Accept</button><button type="button" data-request="decline" data-id="${request.id}">Decline</button></span></div>`
+        : `<div class="friend-request"><span>Request sent to <strong>@${escapeHtml(request.username)}</strong></span><span class="field-note">Pending</span></div>`).join("")}` : "";
+    }
+
+    function renderRecommendationFeed() {
+      const recommendations = socialState.recommendations;
+      if (!recommendations.length) {
+        recommendationFeed.innerHTML = '<p class="recommendation-empty">No recommendations yet. When a friend shares a movie or show, it will appear here.</p>';
+        return;
+      }
+      recommendationFeed.innerHTML = recommendations.map((recommendation) => {
+        const item = catalogue.find((title) => title.id === recommendation.title_id);
+        if (!item) return "";
+        return `<article class="recommendation-item"><div class="recommendation-art" style="--art:${item.art}" aria-hidden="true">${escapeHtml(item.mark)}</div><div><h3>${escapeHtml(item.title)}</h3><p>Recommended by ${escapeHtml(recommendation.sender_display_name)} (@${escapeHtml(recommendation.sender_username)})</p><p class="service-tag">${serviceLogo(item.service)}${escapeHtml(serviceById[item.service])} · ${item.year} · ${item.type === "movie" ? "Movie" : "TV show"}</p>${recommendation.message ? `<p>${escapeHtml(recommendation.message)}</p>` : ""}</div><button class="save-button" type="button" data-action="add" data-id="${item.id}">Add to list</button></article>`;
+      }).join("");
+    }
+
+    async function refreshAccountData() {
+      if (!currentUser || !supabaseClient) {
+        socialState.profile = null;
+        socialState.friends = [];
+        socialState.requests = [];
+        socialState.recommendations = [];
+        socialState.usernameChangesRemaining = 2;
+        renderAccount();
+        renderFriends();
+        return;
+      }
+      const [profileResult, friendsResult, requestsResult, changesResult] = await Promise.all([
+        supabaseClient.from("profiles").select("id, username, display_name, avatar_url").eq("id", currentUser.id).single(),
+        supabaseClient.rpc("list_friends"),
+        supabaseClient.rpc("list_friend_requests"),
+        supabaseClient.rpc("username_changes_remaining")
+      ]);
+      socialState.profile = profileResult.data || null;
+      socialState.friends = friendsResult.data || [];
+      socialState.requests = requestsResult.data || [];
+      socialState.usernameChangesRemaining = changesResult.data ?? 2;
+      renderAccount();
+      renderFriends();
+    }
+
+    function setAccountMessage(message, isError = false) {
+      const element = currentUser ? document.getElementById("lookupResult") : document.getElementById("authMessage");
+      element.textContent = message;
+      element.classList.toggle("account-error", isError);
+      element.classList.toggle("account-success", !isError);
+    }
+
+    async function submitAuthentication() {
+      if (!supabaseClient) return;
+      const email = document.getElementById("authEmail").value.trim();
+      const password = document.getElementById("authPassword").value;
+      if (!email || password.length < 8) {
+        setAccountMessage("Enter your email and a password with at least 8 characters.", true);
+        return;
+      }
+      let result;
+      if (authMode === "signup") {
+        const username = document.getElementById("signupUsername").value.trim().replace(/^@/, "").toLocaleLowerCase();
+        const displayName = document.getElementById("signupDisplayName").value.trim();
+        if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+          setAccountMessage("Username must be 3-20 lowercase letters, numbers, or underscores.", true);
+          return;
+        }
+        if (!displayName) {
+          setAccountMessage("Enter a display name too. It is separate from your @username.", true);
+          return;
+        }
+        result = await supabaseClient.auth.signUp({ email, password, options: { data: { username, display_name: displayName } } });
+      } else {
+        result = await supabaseClient.auth.signInWithPassword({ email, password });
+      }
+      if (result.error) {
+        const message = result.error.code === "23505" ? "That @username is already taken." : result.error.message;
+        setAccountMessage(message, true);
+      } else if (authMode === "signup" && !result.data.session) {
+        setAccountMessage("Check your email to confirm your account, then sign in.");
+      } else {
+        setAccountMessage(authMode === "signup" ? "Account created." : "Signed in.");
+      }
+    }
+
+    async function findUsername() {
+      const rawUsername = document.getElementById("lookupUsername").value.trim().replace(/^@/, "").toLocaleLowerCase();
+      const result = document.getElementById("lookupResult");
+      foundUser = null;
+      if (!/^[a-z0-9_]{3,20}$/.test(rawUsername)) {
+        result.textContent = "Enter an exact @username (3-20 letters, numbers, or underscores).";
+        result.classList.add("account-error");
+        return;
+      }
+      result.textContent = "Searching usernames...";
+      const { data, error } = await supabaseClient.rpc("lookup_user_by_username", { requested_username: rawUsername });
+      if (error) {
+        result.textContent = error.message;
+        result.classList.add("account-error");
+        return;
+      }
+      foundUser = data?.[0] || null;
+      if (!foundUser) {
+        result.textContent = `No account found for @${rawUsername}.`;
+        result.classList.add("account-error");
+        return;
+      }
+      if (foundUser.id === currentUser.id || socialState.friends.some((friend) => friend.id === foundUser.id)) {
+        result.textContent = foundUser.id === currentUser.id ? "That is your own username." : `@${foundUser.username} is already your friend.`;
+        result.classList.remove("account-error");
+        return;
+      }
+      result.classList.remove("account-error");
+      result.innerHTML = `${escapeHtml(foundUser.display_name)} · @${escapeHtml(foundUser.username)} <button class="friend-add" type="button" data-add-found-friend>Send request</button>`;
+    }
+
+    async function sendRecommendation(titleId) {
+      const recipientId = document.getElementById("recommendFriendSelect")?.value;
+      if (!currentUser || !recipientId) {
+        showToast("Add a friend before sending a recommendation.");
+        return;
+      }
+      const { error } = await supabaseClient.from("recommendations").insert({ sender_id: currentUser.id, recipient_id: recipientId, title_id: titleId });
+      if (error) {
+        showToast(error.message);
+        return;
+      }
+      const item = catalogue.find((title) => title.id === titleId);
+      showToast(`${item.title} recommended to your friend.`);
+    }
+
+    async function openRecommendations() {
+      if (!currentUser) {
+        recommendationsModal.classList.remove("hidden");
+        document.body.classList.add("modal-open");
+        recommendationFeed.innerHTML = '<p class="recommendation-empty">Sign in from the account menu to see movies and shows your friends recommend.</p>';
+        document.getElementById("recommendationsClose").focus();
+        return;
+      }
+      recommendationsModal.classList.remove("hidden");
+      document.body.classList.add("modal-open");
+      recommendationFeed.innerHTML = '<p class="recommendation-empty">Loading recommendations...</p>';
+      const { data, error } = await supabaseClient.rpc("get_friend_recommendations");
+      if (error) {
+        recommendationFeed.innerHTML = `<p class="recommendation-empty">${escapeHtml(error.message)}</p>`;
+        return;
+      }
+      socialState.recommendations = data || [];
+      renderRecommendationFeed();
+      document.getElementById("recommendationsClose").focus();
+    }
+
+    function closeRecommendations() {
+      recommendationsModal.classList.add("hidden");
+      if (detailModal.classList.contains("hidden")) document.body.classList.remove("modal-open");
+    }
+
+    async function initializeSupabase() {
+      if (!supabaseClient) {
+        renderAccount();
+        renderFriends();
+        return;
+      }
+      supabaseClient.auth.onAuthStateChange((_event, session) => {
+        currentUser = session?.user || null;
+        queueMicrotask(() => void refreshAccountData());
+      });
+      const { data, error } = await supabaseClient.auth.getSession();
+      if (error) setAccountMessage(error.message, true);
+      currentUser = data?.session?.user || null;
+      await refreshAccountData();
+    }
+
+    async function saveAvatar(file) {
+      const message = document.getElementById("lookupResult");
+      if (!currentUser || !supabaseClient) return;
+      if (!file || !["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
+        message.textContent = "Choose a PNG, JPG, or WebP image. GIFs and other formats are not allowed.";
+        message.classList.add("account-error");
+        return;
+      }
+      if (file.size > 10000000) {
+        message.textContent = "Choose an image smaller than 10 MB.";
+        message.classList.add("account-error");
+        return;
+      }
+      try {
+        const image = await createImageBitmap(file);
+        const side = Math.min(image.width, image.height);
+        const canvas = document.createElement("canvas");
+        canvas.width = 256;
+        canvas.height = 256;
+        const context = canvas.getContext("2d");
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = "high";
+        context.drawImage(image, (image.width - side) / 2, (image.height - side) / 2, side, side, 0, 0, 256, 256);
+        image.close();
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.9));
+        if (!blob) throw new Error("Could not process that image.");
+        const path = `${currentUser.id}/avatar.webp`;
+        const { error: uploadError } = await supabaseClient.storage.from("avatars").upload(path, blob, { upsert: true, contentType: "image/webp", cacheControl: "0" });
+        if (uploadError) throw uploadError;
+        const avatarUrl = `${supabaseClient.storage.from("avatars").getPublicUrl(path).data.publicUrl}?v=${Date.now()}`;
+        const { error: profileError } = await supabaseClient.from("profiles").update({ avatar_url: avatarUrl }).eq("id", currentUser.id);
+        if (profileError) throw profileError;
+        await refreshAccountData();
+        message.textContent = "Profile picture updated to 256 × 256.";
+        message.classList.remove("account-error");
+      } catch (error) {
+        message.textContent = error.message || "Could not upload that picture.";
+        message.classList.add("account-error");
+      }
+    }
+
     function renderServices() {
       serviceOptions.innerHTML = services.map((service) => `
         <span class="service-choice">
           <input type="checkbox" id="service-${service.id}" value="${service.id}" ${state.selectedServices.includes(service.id) ? "checked" : ""}>
-          <label for="service-${service.id}">${service.name}</label>
+          <label for="service-${service.id}">${serviceLogo(service.id)}${service.name}</label>
         </span>`).join("");
       serviceFilter.innerHTML = '<option value="all">All services</option>' + services.map((service) =>
         `<option value="${service.id}">${service.name}</option>`).join("");
@@ -432,22 +862,24 @@
 
     function renderCard(item) {
       const saved = getSavedEntry(item.id);
+      const rating = state.ratings[item.id] || 0;
       const action = saved
         ? `<button class="save-button is-saved" type="button" data-action="remove" data-id="${item.id}" aria-label="Remove ${item.title} from watchlist">In your list</button>`
         : `<button class="save-button" type="button" data-action="add" data-id="${item.id}" aria-label="Add ${item.title} to watchlist">+ Add to list</button>`;
       const statusControl = saved
         ? `<select class="status-select" data-id="${item.id}" aria-label="Watch status for ${item.title}">${Object.entries(statuses).map(([key, label]) => `<option value="${key}" ${saved.status === key ? "selected" : ""}>${label}</option>`).join("")}</select>`
         : "";
+      const ratingControl = `<div class="rating-row"><span class="rating-label">${rating ? `Your rating: ${rating}/5` : "Your rating"}</span><div class="rating-stars" data-rating="${rating}" role="group" aria-label="Rate ${item.title} out of five stars">${[1, 2, 3, 4, 5].map((value) => `<button class="rating-star${value <= rating ? " is-active" : ""}" type="button" data-rate="${item.id}" data-value="${value}" aria-label="${value} star${value === 1 ? "" : "s"}" aria-pressed="${value === rating}">&#9733;</button>`).join("")}</div></div>`;
       return `
         <article class="title-card">
           <div class="poster" style="--art:${item.art}" role="img" aria-label="Colorful poster placeholder for ${item.title}">
-            <span class="poster-mark" aria-hidden="true">${item.mark}</span>
             <p class="poster-title" aria-hidden="true">${item.title}</p>
           </div>
           <div class="card-content">
-            <div class="card-meta"><span class="service-tag">${serviceById[item.service]}</span><span>${item.year} · ${item.type === "movie" ? "Movie" : "TV show"}</span></div>
+            <div class="card-meta"><span class="service-tag">${serviceLogo(item.service)}${serviceById[item.service]}</span><span>${item.year} · ${item.type === "movie" ? "Movie" : "TV show"}</span></div>
             <h3 class="title-name">${item.title}</h3>
             <p class="description">${item.description}<br>${item.genre}</p>
+            ${ratingControl}
             <div class="card-actions"><button class="details-button" type="button" data-details="${item.id}">Details</button>${action}${statusControl}</div>
           </div>
         </article>`;
@@ -461,10 +893,12 @@
       modalTitle.textContent = item.title;
       modalMeta.textContent = `${serviceById[item.service]} · ${item.year} · ${item.type === "movie" ? "Movie" : "TV show"} · ${item.genre}`;
       modalDescription.textContent = item.description;
+      const friendOptions = socialState.friends.map((friend) => `<option value="${friend.id}">@${escapeHtml(friend.username)}</option>`).join("");
       modalActions.innerHTML = `${saved
         ? `<button class="save-button is-saved" type="button" data-action="remove" data-id="${item.id}">Remove from list</button>`
         : `<button class="save-button" type="button" data-action="add" data-id="${item.id}">+ Add to list</button>`}
-        <span class="service-tag">Demo availability on ${serviceById[item.service]}</span>`;
+        <span class="service-tag">${serviceLogo(item.service)}Demo availability on ${serviceById[item.service]}</span>
+        ${currentUser && socialState.friends.length ? `<label for="recommendFriendSelect" class="field-note">Recommend to</label><select class="recommend-select" id="recommendFriendSelect">${friendOptions}</select><button class="details-button" type="button" data-send-recommend="${item.id}">Recommend</button>` : ""}`;
       detailModal.classList.remove("hidden");
       document.body.classList.add("modal-open");
       document.getElementById("modalClose").focus();
@@ -499,6 +933,8 @@
       titleGrid.classList.toggle("hidden", results.length === 0);
       emptyState.classList.toggle("hidden", results.length !== 0);
       document.getElementById("savedCount").textContent = String(state.watchlist.length);
+      renderAccount();
+      renderFriends();
       document.getElementById("resultCount").textContent = `${results.length} ${results.length === 1 ? "title" : "titles"}`;
       document.getElementById("viewHeading").innerHTML = `<strong>${activeView === "watchlist" ? "Your watchlist" : "Browse the catalogue"}</strong>`;
 
@@ -526,10 +962,128 @@
     function changeView(view) {
       activeView = view;
       render();
+      navMenu.classList.add("hidden");
+      document.getElementById("menuToggle").setAttribute("aria-expanded", "false");
       document.querySelector(".section-toolbar").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    document.addEventListener("click", (event) => {
+    document.addEventListener("click", async (event) => {
+      if (event.target.closest("#authModeToggle")) {
+        authMode = authMode === "signup" ? "signin" : "signup";
+        renderAccount();
+        return;
+      }
+      if (event.target.closest("#authSubmit")) {
+        void submitAuthentication();
+        return;
+      }
+      if (event.target.closest("#saveDisplayName")) {
+        const displayName = document.getElementById("displayNameInput").value.trim();
+        if (!displayName) {
+          setAccountMessage("Enter a display name before saving.", true);
+          return;
+        }
+        const { error } = await supabaseClient.from("profiles").update({ display_name: displayName }).eq("id", currentUser.id);
+        if (error) setAccountMessage(error.message, true);
+        else {
+          await refreshAccountData();
+          setAccountMessage("Display name updated.");
+        }
+        return;
+      }
+      if (event.target.closest("#saveUsername")) {
+        const username = document.getElementById("usernameInput").value.trim().replace(/^@/, "").toLocaleLowerCase();
+        if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+          setAccountMessage("Use 3-20 lowercase letters, numbers, or underscores.", true);
+          return;
+        }
+        if (username === socialState.profile?.username) {
+          setAccountMessage("That is already your username.");
+          return;
+        }
+        const { error } = await supabaseClient.rpc("change_username", { new_username: username });
+        if (error) setAccountMessage(error.code === "23505" ? "That @username is already taken." : error.message, true);
+        else {
+          await refreshAccountData();
+          setAccountMessage(`Your new username is @${username}.`);
+        }
+        return;
+      }
+      if (event.target.closest("#signOutButton")) {
+        const { error } = await supabaseClient.auth.signOut();
+        if (error) showToast(error.message);
+        else showToast("Signed out.");
+        return;
+      }
+      if (event.target.closest("#lookupUser")) {
+        void findUsername();
+        return;
+      }
+      if (event.target.closest("[data-add-found-friend]")) {
+        if (!foundUser) return;
+        const { error } = await supabaseClient.from("friend_requests").insert({ requester_id: currentUser.id, recipient_id: foundUser.id });
+        if (error) setAccountMessage(error.code === "23505" ? "A friend request already exists." : error.message, true);
+        else {
+          setAccountMessage(`Friend request sent to @${foundUser.username}.`);
+          foundUser = null;
+          await refreshAccountData();
+        }
+        return;
+      }
+      const requestButton = event.target.closest("[data-request]");
+      if (requestButton) {
+        const requestId = requestButton.dataset.id;
+        const requestAction = requestButton.dataset.request;
+        const requestQuery = supabaseClient.from("friend_requests").update({ status: "accepted" }).eq("id", requestId);
+        const { error } = requestAction === "accept"
+          ? await requestQuery.eq("recipient_id", currentUser.id)
+          : await supabaseClient.from("friend_requests").delete().eq("id", requestId);
+        if (error) setAccountMessage(error.message, true);
+        else await refreshAccountData();
+        return;
+      }
+      const recommendButton = event.target.closest("[data-send-recommend]");
+      if (recommendButton) {
+        void sendRecommendation(recommendButton.dataset.sendRecommend);
+        return;
+      }
+      if (event.target.closest("[data-open-recommendations]")) {
+        navMenu.classList.add("hidden");
+        document.getElementById("menuToggle").setAttribute("aria-expanded", "false");
+        void openRecommendations();
+        return;
+      }
+      const ratingButton = event.target.closest("[data-rate]");
+      if (ratingButton) {
+        const { rate: id, value } = ratingButton.dataset;
+        const currentRating = state.ratings[id] || 0;
+        if (currentRating === Number(value)) delete state.ratings[id];
+        else state.ratings[id] = Number(value);
+        persistState();
+        render();
+        return;
+      }
+      if (event.target.closest("#menuToggle")) {
+        const isOpen = navMenu.classList.toggle("hidden") === false;
+        document.getElementById("menuToggle").setAttribute("aria-expanded", String(isOpen));
+        accountMenu.classList.add("hidden");
+        document.getElementById("accountTrigger").setAttribute("aria-expanded", "false");
+        return;
+      }
+      if (event.target.closest("#accountTrigger")) {
+        const isOpen = accountMenu.classList.toggle("hidden") === false;
+        document.getElementById("accountTrigger").setAttribute("aria-expanded", String(isOpen));
+        navMenu.classList.add("hidden");
+        document.getElementById("menuToggle").setAttribute("aria-expanded", "false");
+        return;
+      }
+      const scrollTarget = event.target.closest("[data-scroll]");
+      if (scrollTarget) {
+        document.getElementById(scrollTarget.dataset.scroll)?.scrollIntoView({ behavior: "smooth" });
+        navMenu.classList.add("hidden");
+        document.getElementById("menuToggle").setAttribute("aria-expanded", "false");
+        return;
+      }
       const detailsButton = event.target.closest("[data-details]");
       if (detailsButton) {
         openDetails(detailsButton.dataset.details);
@@ -537,6 +1091,10 @@
       }
       if (event.target === detailModal || event.target.closest("#modalClose")) {
         closeDetails();
+        return;
+      }
+      if (event.target === recommendationsModal || event.target.closest("#recommendationsClose")) {
+        closeRecommendations();
         return;
       }
       const viewButton = event.target.closest("[data-view]");
@@ -564,8 +1122,27 @@
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && !detailModal.classList.contains("hidden")) closeDetails();
+      if (event.key === "Escape") {
+        closeRecommendations();
+        navMenu.classList.add("hidden");
+        accountMenu.classList.add("hidden");
+        document.getElementById("menuToggle").setAttribute("aria-expanded", "false");
+        document.getElementById("accountTrigger").setAttribute("aria-expanded", "false");
+      }
     });
 
+    document.getElementById("avatarInput").addEventListener("change", (event) => void saveAvatar(event.target.files[0]));
+
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".account-area") && !event.target.closest("#menuToggle") && !event.target.closest("#navMenu")) {
+        accountMenu.classList.add("hidden");
+        document.getElementById("accountTrigger").setAttribute("aria-expanded", "false");
+      }
+      if (!event.target.closest("#navMenu") && !event.target.closest("#menuToggle")) {
+        navMenu.classList.add("hidden");
+        document.getElementById("menuToggle").setAttribute("aria-expanded", "false");
+      }
+    });
 
     document.addEventListener("change", (event) => {
       if (event.target.matches("#serviceOptions input[type='checkbox']")) {
@@ -598,6 +1175,7 @@
 
     renderServices();
     render();
+    void initializeSupabase();
   </script>
 </body>
 </html>
