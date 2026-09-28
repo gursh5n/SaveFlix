@@ -10,16 +10,9 @@
 
 Usernames are unique, separate from display names, and can be changed at most twice during any rolling 14-day period. That limit is checked transactionally in the database. Friend requests and recommendations require authenticated accounts; only accepted friends can exchange recommendations.
 
-## Streaming service icons
+## Streaming service logos
 
-Put SVG logo files in `assets/streaming-services/` using these filenames:
-
-- `netflix.svg`
-- `hulu.svg`
-- `disney-plus.svg`
-- `prime-video.svg`
-
-The page uses those paths in both the service filters and title cards. If an icon file is not present or fails to load, the text mark remains visible.
+The page uses local SVG logos in `assets/streaming-services/` for Netflix, Hulu, Disney+, and Prime Video. Text marks appear if a logo file is missing. Service selections are saved on the current device; provider sign-in is not available in this demo.
 
 ## Profile pictures
 

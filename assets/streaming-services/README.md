@@ -1,8 +1,8 @@
-Place the service logo SVGs in this folder:
+The interface loads these local SVG logos:
 
-- netflix.svg
-- hulu.svg
-- disney-plus.svg
-- prime-video.svg
+- `netflix.svg`
+- `hulu.svg`
+- `disney-plus.svg`
+- `prime-video.svg`
 
-The interface keeps a text fallback when an image is missing.
+If a logo cannot load, its text mark is shown instead.
